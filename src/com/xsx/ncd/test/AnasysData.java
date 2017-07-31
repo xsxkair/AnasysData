@@ -13,7 +13,10 @@ import javax.imageio.ImageIO;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jfoenix.controls.JFXTextArea;
+import com.xsx.ncd.entity.Card;
 import com.xsx.ncd.entity.TestData;
+import com.xsx.ncd.repository.CardRepository;
 import com.xsx.ncd.repository.TestDataRepository;
 import com.xsx.ncd.spring.SpringFacktory;
 
@@ -26,9 +29,11 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import jxl.Cell;
 import jxl.Sheet;
@@ -44,40 +49,31 @@ public class AnasysData extends Application{
 	private Scene scene = null;
 	
 	@FXML LineChart<Number, Number> myChart;
-	@FXML Label cvLabel1;
-	@FXML Label cvLabel2;
-	@FXML Label cvLabel3;
-	@FXML Label cvLabel4;
-	@FXML Label cvLabel5;
-	@FXML Label cvLabel6;
-	@FXML Label cvLabel7;
-	@FXML Label cvLabel8;
-	@FXML Label cvLabel9;
-	@FXML Label cvLabel10;
-	@FXML Label cvLabel11;
-	@FXML Label cvLabel12;
-	@FXML Label cvLabel13;
-	@FXML Label cvLabel14;
-	@FXML Label cvLabel15;
-	@FXML Label cvLabel16;
-	@FXML Label cvLabel17;
-	@FXML Label cvLabel18;
-	@FXML Label cvLabel19;
-	@FXML Label cvLabel20;
-	private Label[] cvLabels = new Label[20];
+	@FXML Label IDLabel;
+	
+	@FXML Label DeviceTLabel;
+	@FXML Label DeviceBLabel;
+	@FXML Label DeviceCLabel;
+	
+	@FXML Label Label;
+	@FXML Label Label1;
+	@FXML Label Label2;
+	@FXML Label Label3;
+	@FXML Label Label4;
+	@FXML Label Label5;
+	@FXML Label Label6;
+	@FXML Label Label7;
+	@FXML Label Label8;
 	
 	private TestDataRepository testDataRepository;
+	private CardRepository cardRepository;
 	private ObjectMapper mapper = new ObjectMapper();
 	private JavaType javaType = null;
 	private List<Double> seriesdata = new ArrayList<>();
-	private List<Double> cvDatas = new ArrayList<>();				//每隔calnum个点的cv值
-	private Double[] cvDatasOfTC = new Double[4];			//TC线前后的CV值
-	private Series<Number, Number> series1 = new Series<>();
+	private Series<Number, Number> series = new Series<>();
 	private int size = 0;
-	private double tempDouble1 = 0;
-	
-	private final int calnum = 15;
-	private final String fileName = "e:\\image\\data.xls";
+
+	private final String fileName = "e:\\image1\\data.xls";
 
 	public void UI_Init(){
 		
@@ -92,31 +88,19 @@ public class AnasysData extends Application{
 			e.printStackTrace();
 		}
         
-        cvLabels[0] = cvLabel1;
-        cvLabels[1] = cvLabel2;
-        cvLabels[2] = cvLabel3;
-        cvLabels[3] = cvLabel4;
-        cvLabels[4] = cvLabel5;
-        cvLabels[5] = cvLabel6;
-        cvLabels[6] = cvLabel7;
-        cvLabels[7] = cvLabel8;
-        cvLabels[8] = cvLabel9;
-        cvLabels[9] = cvLabel10;
-        cvLabels[10] = cvLabel11;
-        cvLabels[11] = cvLabel12;
-        cvLabels[12] = cvLabel13;
-        cvLabels[13] = cvLabel14;
-        cvLabels[14] = cvLabel15;
-        cvLabels[15] = cvLabel16;
-        cvLabels[16] = cvLabel17;
-        cvLabels[17] = cvLabel18;
-        cvLabels[18] = cvLabel19;
-        cvLabels[19] = cvLabel20;
-        myChart.getData().addAll(series1);
+        myChart.getData().addAll(series);
         myChart.setAnimated(false);
         
-        
- 
+        Label.visibleProperty().bind(Label.textProperty().length().greaterThan(0));
+        Label1.visibleProperty().bind(Label1.textProperty().length().greaterThan(0));
+        Label2.visibleProperty().bind(Label2.textProperty().length().greaterThan(0));
+        Label3.visibleProperty().bind(Label3.textProperty().length().greaterThan(0));
+        Label4.visibleProperty().bind(Label4.textProperty().length().greaterThan(0));
+        Label5.visibleProperty().bind(Label5.textProperty().length().greaterThan(0));
+        Label6.visibleProperty().bind(Label6.textProperty().length().greaterThan(0));
+        Label7.visibleProperty().bind(Label7.textProperty().length().greaterThan(0));
+        Label8.visibleProperty().bind(Label8.textProperty().length().greaterThan(0));
+
         loader = null;
         in = null;
 	}
@@ -143,14 +127,334 @@ public class AnasysData extends Application{
 	}
 	
 	private void anasysDataFun(){
-		int i=0, j=0;
+		int i=0, j=0, k=0;
 		List<Double> tempd = null;
+		List<Double> tempd2 = new ArrayList<>();
 		Integer t, b, c;
+		StackPane stackPane;
+		double tempv1 = 0;
+		MyPoint tempTPoint = new MyPoint();
+		MyPoint tempBPoint = new MyPoint();
+		MyPoint tempCPoint = new MyPoint();
+		MyPoint tempPoint = new MyPoint();
+
+		TestData testData = null;
+		
+		Card card = null;
+		int t_l = 0;
+		int c_l = 0;
+		double tempcv1 = 0;
+		double tempcv2 = 0;
+		double tempcv3 = 0;
+		double tempcv4 = 0;
+
+		testDataRepository = SpringFacktory.getCtx().getBean(TestDataRepository.class);
+		cardRepository = SpringFacktory.getCtx().getBean(CardRepository.class);
+		javaType = mapper.getTypeFactory().constructParametricType(List.class, Double.class);
+
+		for(j=2500; j<2649; j++) {
+			testData = testDataRepository.findOne(j);
+
+	        if(testData != null){
+	
+	        	card = cardRepository.findCardByCid(testData.getCid());
+	        	if(card == null)
+	        	{
+	        		continue;
+	        	}
+	        	
+	        	Label.setText(null);
+	        	Label1.setText(null);
+	        	Label2.setText(null);
+	        	Label3.setText(null);
+	        	Label4.setText(null);
+	        	Label5.setText(null);
+	        	Label6.setText(null);
+	        	Label7.setText(null);
+	        	Label8.setText(null);
+	        	
+	        	seriesdata.clear();
+	        	series.getData().clear();
+	        	IDLabel.setText(String.format("%s-%s", testData.getCid(), testData.getCnum()));
+
+		        try {
+		        	if(testData.getSerie_a() != null){
+		        		tempd = mapper.readValue(testData.getSerie_a(), javaType);
+	    		        seriesdata.addAll(tempd);
+		        	}
+			        
+		        	if(testData.getSerie_b() != null){
+		        		tempd = mapper.readValue(testData.getSerie_b(), javaType);
+	    		        seriesdata.addAll(tempd);
+		        	}
+			       
+		        	if(testData.getSerie_c() != null){
+		        		tempd = mapper.readValue(testData.getSerie_c(), javaType);
+	    		        seriesdata.addAll(tempd);
+		        	}
+
+				} catch (Exception e) {
+					continue;
+				}
+		        
+		        //显示原始曲线
+		        t = testData.getT_l();
+		        b = testData.getB_l();
+		        c = testData.getC_l();
+		        size = seriesdata.size();
+		        if(size != 300)
+		        	continue;
+		        
+		        tempBPoint.resetMyPoint();
+		        tempCPoint.resetMyPoint();
+		        tempTPoint.resetMyPoint();
+		        tempPoint.resetMyPoint();
+		        for(i=0; i<size; i++)
+		        {
+		        	tempv1 = seriesdata.get(i);
+		        	Data<Number, Number> data = new Data<Number, Number>(i, tempv1);
+		        	series.getData().add(data);
+		        	stackPane = (StackPane) data.getNode();
+		        	stackPane.setPrefSize(1, 1);
+				}
+		        
+		        if(t != null) {
+		        	stackPane = (StackPane) series.getData().get(t).getNode();
+		        	stackPane.setStyle("-fx-background-color:red");
+		        	stackPane.setPrefSize(10, 10);
+	        		
+		        	DeviceTLabel.setText(String.format("(%d, %.0f)", t, seriesdata.get(t)));
+	        	}
+
+		        if(c != null){
+		        	stackPane = (StackPane) series.getData().get(c).getNode();
+			        stackPane.setStyle("-fx-background-color:red");
+		        	stackPane.setPrefSize(10, 10);
+		        	DeviceCLabel.setText(String.format("(%d, %.0f)", c, seriesdata.get(c)));
+	        	}
+		        
+		        t_l = card.getT_l();
+		        c_l = card.getC_l();
+		        //找T
+		        findFeng(seriesdata, t_l-20, t_l, t_l+20, tempTPoint);
+		        if(tempTPoint.x == 0)
+		        {
+		        	stackPane = (StackPane) series.getData().get(t_l).getNode();
+		        	Label.setText("错误");
+		        	Label2.setText("找不到T线");
+		        	Label2.setLayoutX(stackPane.getLayoutX()+40);
+		        	Label2.setLayoutY(stackPane.getLayoutY()+15);
+		        	saveImage(testData);
+		        	continue;
+		        }
+		        else
+		        {
+		        	stackPane = (StackPane) series.getData().get(tempTPoint.x).getNode();
+				    stackPane.setStyle("-fx-background-color:black");
+				    stackPane.setPrefSize(10, 10);
+				    
+		        	Label2.setText(String.format("(%d, %.0f)", tempTPoint.x, tempTPoint.y));
+		        	Label2.setLayoutX(stackPane.getLayoutX()+40);
+		        	Label2.setLayoutY(stackPane.getLayoutY()+15);
+		        }
+		       
+		        
+		        //找C
+		        findFeng(seriesdata, c_l-20, c_l, c_l+20, tempCPoint);
+		        if(tempCPoint.x == 0)
+		        {
+		        	ResultLabel7.setText("无C");
+		        	saveImage(testData);
+		        	continue;
+		        }
+		        ResultLabel2.setText(String.format("(%d, %.0f)", tempCPoint.x, tempCPoint.y));
+		        stackPane = (StackPane) series1.getData().get(tempCPoint.x).getNode();
+				stackPane.setStyle("-fx-background-color:black");
+	        	stackPane.setPrefSize(10, 10);
+		        
+		        //判断峰前段的cv
+	        	tempd = seriesdata.subList(tempTPoint.x - 15, tempTPoint.x);
+	        	tempcv1 = getDataCV(tempd);
+	        	tempd = seriesdata.subList(tempTPoint.x, tempTPoint.x + 15);
+	        	tempcv2 = getDataCV(tempd);
+	        	tempd = seriesdata.subList(tempCPoint.x - 15, tempCPoint.x);
+	        	tempcv3 = getDataCV(tempd);
+	        	tempd = seriesdata.subList(tempCPoint.x, tempCPoint.x + 15);
+	        	tempcv4 = getDataCV(tempd);
+	        	
+	        	logTextArea.appendText(String.format("%.4f-%.4f %.4f-%.4f\r\n", tempcv1, tempcv2, tempcv3, tempcv4));
+	        	if(tempcv1 < 0.1 && tempcv2 < 0.1 && tempcv3 < 0.1 && tempcv4 < 0.1)
+	        	{
+	        		ResultLabel7.setText(String.format("%.4f-%.4f %.4f-%.4f 没有高峰", tempcv1, tempcv2, tempcv3, tempcv4));
+	        		saveImage(testData);
+	        		continue;
+	        	}
+
+		        //T-C距离
+		        i = tempCPoint.x - tempTPoint.x;
+		        logTextArea.appendText(String.format("%d\r\n", i));
+		        if((i < 70) && (i > 90))
+		        {
+		        	ResultLabel7.setText(String.format("%d, T-C距离错误", i));
+		        	saveImage(testData);
+		        	continue;
+		        }
+		        
+		        //找基线
+		        tempBPoint.y = 20000;
+		        tempBPoint.x = 0;
+		        for(i=tempTPoint.x; i<tempCPoint.x; i++)
+		        {
+		        	if(tempBPoint.y > seriesdata.get(i))
+		        	{
+		        		tempBPoint.x = i;
+		        		tempBPoint.y = seriesdata.get(i);
+		        	}
+		        }
+		        stackPane = (StackPane) series1.getData().get(tempBPoint.x).getNode();
+				stackPane.setStyle("-fx-background-color:black");
+	        	stackPane.setPrefSize(10, 10);
+		        ResultLabel5.setText(String.format("(%d, %.0f)", tempBPoint.x, tempBPoint.y));
+		        
+		        saveImage(testData);
+			}
+		}
+       
+		System.exit(0);
+	}
+	
+	private void saveImage(TestData testData) {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+        Image image = rootPane.snapshot(null, null);
+	    try {
+	        ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png",
+	                new File("e:\\image\\" + testData.getCid()+testData.getCnum() + ".png"));
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	private void findFeng(List<Double> datas, int startIndex, int midIndex, int endIndex, MyPoint myPoint)
+	{
+		int i=0, j=0;
+		double juli = 10000;
+		double tempv1 = 0;
+		MyPoint tempPoint = new MyPoint();
+		
+		myPoint.resetMyPoint();
+        for(i=startIndex; i<endIndex; i++)
+        {
+        	//找最大值
+        	tempPoint.resetMyPoint();
+        	for(j=i-15; j<15+i; j++) 
+        	{
+        		tempv1 = datas.get(j);
+        		if(tempPoint.y < tempv1) 
+        		{
+        			tempPoint.y = tempv1;
+        			tempPoint.x = j;
+        		}
+        	}
+
+        	//阶段2： 判断最大值位置是不是封顶
+        	for(j=0; j<10; j++) 
+        	{
+        		//峰前必须递增
+        		if(datas.get(tempPoint.x-j) < datas.get(tempPoint.x-j-1))
+        			break;
+        			
+        		//峰后必须递减
+        		if(datas.get(tempPoint.x+j) < datas.get(tempPoint.x+j+1))
+        			break;
+        	}
+        	// 如果阶段结果失败，则找峰失败
+        	if(j < 10)
+        	{
+        		i += 10;
+        		continue;
+        	}
+        	else 
+        	{
+        		if(juli > Math.abs(tempPoint.x - midIndex))
+        		{
+        			juli = Math.abs(tempPoint.x - midIndex);
+
+		        	myPoint.x = tempPoint.x;
+		        	myPoint.y = tempPoint.y;
+        		}
+        		
+        		i = (tempPoint.x + 15);
+        	}
+        }
+	}
+	
+	private double aveag(List<Double> datas) {
+		double sum = 0.0;
+		
+		for (double a : datas) {
+			sum += a;
+		}
+		sum /= datas.size();
+		return sum;
+	}	
+	
+	private double getDataCV(List<Double> datas) {
+		int size = datas.size();
+		double sum = 0.0f;
+		double tempv1 = 0;
+		double tempv2 = 0;
+		
+		//找平均值
+		sum = aveag(datas);
+		
+		//计算标准差
+		for (double j : datas) {
+			tempv1 = j;
+			tempv1 -= sum;
+			tempv1 *= tempv1;
+			tempv2 += tempv1;
+		}
+		tempv2 /= size;
+		tempv2 = Math.sqrt(tempv2);
+
+		return tempv2 / sum;
+	}
+	
+	class MyPoint{
+		
+		public int x;
+		public double y;
+		
+		public MyPoint() {
+			this.x = 0;
+			this.y = 0;
+		}
+		
+		public MyPoint(int x, double y) {
+			this.x = x;
+			this.y = y;
+		}
+		
+		public void resetMyPoint() {
+			this.x = 0;
+			this.y = 0;
+		}
+	}
+	
+	private void saveData() {
+
 		WritableWorkbook wb = null;
 		FileOutputStream fileOut = null;
 		jxl.write.Number number = null;
 		WritableSheet sheet = null;
 		int rownum = 0;
+
 		
 		try {
 			fileOut = new FileOutputStream(fileName);
@@ -177,134 +481,34 @@ public class AnasysData extends Application{
 		
 		if(sheet == null)
 			sheet = wb.createSheet("数据", 0);
-		
-		testDataRepository = SpringFacktory.getCtx().getBean(TestDataRepository.class);
-		javaType = mapper.getTypeFactory().constructParametricType(List.class, Double.class);
-		
+
 		rownum = sheet.getRows();
 
-		for(j=0; j<2550; j++) {
-			TestData testData = testDataRepository.findOne(j+1);
-	        
-	        if(testData != null){
-	        	seriesdata.clear();
-	        	cvDatas.clear();
-	        	series1.getData().clear();
-
-		        try {
-		        	if(testData.getSerie_a() != null){
-		        		tempd = mapper.readValue(testData.getSerie_a(), javaType);
-	    		        seriesdata.addAll(tempd);
-		        	}
-			        
-		        	if(testData.getSerie_b() != null){
-		        		tempd = mapper.readValue(testData.getSerie_b(), javaType);
-	    		        seriesdata.addAll(tempd);
-		        	}
-			       
-		        	if(testData.getSerie_c() != null){
-		        		tempd = mapper.readValue(testData.getSerie_c(), javaType);
-	    		        seriesdata.addAll(tempd);
-		        	}
-
-				} catch (Exception e) {
-					seriesdata.clear();
-					
-					return;
-				}
-		        
-		        //显示原始曲线，且计算cv值
-		        t = testData.getT_l();
-		        b = testData.getB_l();
-		        c = testData.getC_l();
-		        size = seriesdata.size();
-		        for(i=0; i<size; i++){
-
-		        	Data<Number, Number> data = new Data<Number, Number>(i, seriesdata.get(i));
-
-		        	series1.getData().add(data);
-		        	StackPane stackPane = (StackPane) data.getNode();
-		        	stackPane.setPrefSize(1, 1);
-		        	if((t != null) && (i == t.intValue())){
-		        		stackPane.setStyle("-fx-background-color:red");
-		        		stackPane.setPrefSize(10, 10);
-		        		
-		        		try {
-		        			tempd = seriesdata.subList(i-15, i);
-			        		tempDouble1 = getDataCV(tempd);
-			        		cvDatasOfTC[0] = tempDouble1;
-			        		
-			        		tempd = seriesdata.subList(i, i+15);
-			        		tempDouble1 = getDataCV(tempd);
-			        		cvDatasOfTC[1] = tempDouble1;
-
-						} catch (Exception e) {
-							e.printStackTrace();
-							// TODO: handle exception
-						}
-		        	}
-		        	else if((b != null) && (i == b.intValue())){
-		        		stackPane.setStyle("-fx-background-color:green");
-		        		stackPane.setPrefSize(10, 10);
-		        	}
-		        	else if((c != null) && (i == c.intValue())){
-		        		stackPane.setStyle("-fx-background-color:blue");
-		        		stackPane.setPrefSize(10, 10);
-		        		
-		        		try {
-		        			tempd = seriesdata.subList(i-15, i);
-			        		tempDouble1 = getDataCV(tempd);
-			        		cvDatasOfTC[2] = tempDouble1;
-			        		
-			        		tempd = seriesdata.subList(i, i+15);
-			        		tempDouble1 = getDataCV(tempd);
-			        		cvDatasOfTC[3] = tempDouble1;
-
-						} catch (Exception e) {
-							// TODO: handle exception
-							e.printStackTrace();
-						}
-		        	}
-		        	
-		        	//每隔calnum个点cv值
-		        	if(i % calnum == 0) {
-		        		try {
-		        			tempd = seriesdata.subList(i, i+calnum);
-			        		tempDouble1 = getDataCV(tempd);
-			        		cvDatas.add(tempDouble1);
-			        		
-			        		cvLabels[i/calnum].setText(String.format("%.4f", tempDouble1));
-						} catch (Exception e) {
-							// TODO: handle exception
-							e.printStackTrace();
-						}
-		        	}
-				}
-
+/*
 		        try {
 		        	
 		        	rownum++;
 				    jxl.write.Label pihaoLabel = new jxl.write.Label(0, rownum, String.format("%s-%s", testData.getCid(), testData.getCnum())); 
-			    	
-						sheet.addCell(pihaoLabel);
+			    	sheet.addCell(pihaoLabel);
+			    
+					//number = new jxl.write.Number(1, rownum, seriesdata.get(t)); 
+					//sheet.addCell(number);
+					number = new jxl.write.Number(2, rownum, cvDatasOfTC[0]); 
+					sheet.addCell(number);
+					number = new jxl.write.Number(3, rownum, cvDatasOfTC[1]); 
+					sheet.addCell(number);
+					number = new jxl.write.Number(4, rownum, Math.abs(cvDatasOfTC[0] - cvDatasOfTC[1])); 
+					sheet.addCell(number);
 					
-			    	 
-				    for(i=0; i<cvDatas.size(); i++) {
-				    	 number = new jxl.write.Number(i+1, rownum, cvDatas.get(i)); 
-				    	 sheet.addCell(number);
-				    }
-				    
-				    for(i=0; i<cvDatasOfTC.length; i++) {
-					    number = new jxl.write.Number(i+21, rownum, cvDatasOfTC[i]); 
-				    	 sheet.addCell(number);
-				    }
-				    
-				    number = new jxl.write.Number(25, rownum, t); 
-			    	 sheet.addCell(number);
-			    	 
-			    	 number = new jxl.write.Number(26, rownum, c); 
-			    	 sheet.addCell(number);
-			    	 
+					//number = new jxl.write.Number(6, rownum, seriesdata.get(c)); 
+					//sheet.addCell(number);
+					number = new jxl.write.Number(7, rownum, cvDatasOfTC[2]); 
+					sheet.addCell(number);
+					number = new jxl.write.Number(8, rownum, cvDatasOfTC[3]); 
+					sheet.addCell(number);
+					number = new jxl.write.Number(9, rownum, Math.abs(cvDatasOfTC[2] - cvDatasOfTC[3])); 
+					sheet.addCell(number);
+		    	 
 		        } catch (RowsExceededException e2) {
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
@@ -312,23 +516,7 @@ public class AnasysData extends Application{
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
-		    	 
-		        try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
-		        Image image = rootPane.snapshot(null, null);
-			    try {
-			        ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png",
-			                new File("e:\\image\\" + testData.getCid()+testData.getCnum() + ".png"));
-			    } catch (IOException e) {
-			        e.printStackTrace();
-			    }
-			}
-		}
+*/
 		
 		try {
 			wb.write();
@@ -342,39 +530,5 @@ public class AnasysData extends Application{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-       
-		System.exit(0);
-	}
-	
-	private double aveag(List<Double> datas) {
-		double sum = 0.0;
-		
-		for (double a : datas) {
-			sum += a;
-		}
-		sum /= datas.size();
-		return sum;
-	}
-	
-	private double getDataCV(List<Double> datas) {
-		int size = datas.size();
-		double sum = 0.0f;
-		double tempv1 = 0;
-		double tempv2 = 0;
-		
-		//找平均值
-		sum = aveag(datas);
-		
-		//计算标准差
-		for (double j : datas) {
-			tempv1 = j;
-			tempv1 -= sum;
-			tempv1 *= tempv1;
-			tempv2 += tempv1;
-		}
-		tempv2 /= size;
-		tempv2 = Math.sqrt(tempv2);
-
-		return tempv2 / sum;
 	}
 }

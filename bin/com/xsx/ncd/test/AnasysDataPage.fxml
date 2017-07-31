@@ -3,69 +3,80 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #f4f4f4;" stylesheets="@MainUI.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <LineChart fx:id="myChart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <xAxis>
-          <NumberAxis animated="false" autoRanging="false" side="BOTTOM" tickUnit="20.0" upperBound="300.0" />
+          <NumberAxis animated="false" autoRanging="false" side="BOTTOM" tickLength="20.0" tickUnit="20.0" upperBound="300.0" />
         </xAxis>
         <yAxis>
           <NumberAxis animated="false" side="LEFT" />
         </yAxis>
       </LineChart>
-      <GridPane gridLinesVisible="true" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="44.0" AnchorPane.rightAnchor="11.0" AnchorPane.topAnchor="0.0">
-        <columnConstraints>
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <VBox spacing="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="10.0">
          <children>
-            <Label fx:id="cvLabel1" text="0.0023" />
-            <Label fx:id="cvLabel2" text="Label" GridPane.columnIndex="1" />
-            <Label fx:id="cvLabel3" text="Label" GridPane.columnIndex="2" />
-            <Label fx:id="cvLabel4" text="Label" GridPane.columnIndex="3" />
-            <Label fx:id="cvLabel5" text="Label" GridPane.columnIndex="4" />
-            <Label fx:id="cvLabel6" text="Label" GridPane.columnIndex="5" />
-            <Label fx:id="cvLabel7" text="Label" GridPane.columnIndex="6" />
-            <Label fx:id="cvLabel8" text="Label" GridPane.columnIndex="7" />
-            <Label fx:id="cvLabel9" text="Label" GridPane.columnIndex="8" />
-            <Label fx:id="cvLabel10" text="Label" GridPane.columnIndex="9" />
-            <Label fx:id="cvLabel11" text="Label" GridPane.columnIndex="10" />
-            <Label fx:id="cvLabel12" text="Label" GridPane.columnIndex="11" />
-            <Label fx:id="cvLabel13" text="Label" GridPane.columnIndex="12" />
-            <Label fx:id="cvLabel14" text="Label" GridPane.columnIndex="13" />
-            <Label fx:id="cvLabel15" text="Label" GridPane.columnIndex="14" />
-            <Label fx:id="cvLabel16" text="Label" GridPane.columnIndex="15" />
-            <Label fx:id="cvLabel17" text="Label" GridPane.columnIndex="16" />
-            <Label fx:id="cvLabel18" text="Label" GridPane.columnIndex="17" />
-            <Label fx:id="cvLabel19" text="0.0023" GridPane.columnIndex="18" />
-            <Label fx:id="cvLabel20" text="0.0023" GridPane.columnIndex="19" />
+            <HBox spacing="10.0">
+               <children>
+                  <Label text="试剂卡编号：">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="IDLabel" style="-fx-background-color: black;" text="Label" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <GridPane gridLinesVisible="true" style="-fx-background-color: rgba(135,202,250,0.2);">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label text="T线" />
+                  <Label text="C线" GridPane.rowIndex="2" />
+                  <Label fx:id="DeviceTLabel" text="Label" GridPane.columnIndex="1" />
+                  <Label fx:id="DeviceCLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label text="基线" GridPane.rowIndex="1" />
+                  <Label fx:id="DeviceBLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               </children>
+            </GridPane>
          </children>
-      </GridPane>
+      </VBox>
+      <Label fx:id="Label1" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
+      <Label fx:id="Label2" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
+      <Label fx:id="Label3" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
+      <Label fx:id="Label4" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
+      <Label fx:id="Label5" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
+      <Label fx:id="Label6" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
+      <Label fx:id="Label7" alignment="CENTER" layoutX="1144.0" layoutY="225.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
+      <Label fx:id="Label8" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
+      <ImageView fx:id="yes" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="150.0">
+         <image>
+            <Image url="@../../../../res/yes.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="error" fitHeight="150.0" fitWidth="200.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="150.0">
+         <image>
+            <Image url="@../../../../res/error.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
