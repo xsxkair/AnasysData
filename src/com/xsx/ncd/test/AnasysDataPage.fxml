@@ -17,10 +17,10 @@
    <children>
       <LineChart fx:id="myChart" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <xAxis>
-          <NumberAxis animated="false" autoRanging="false" side="BOTTOM" tickLength="20.0" tickUnit="20.0" upperBound="300.0" />
+          <NumberAxis animated="false" autoRanging="false" minorTickCount="4" side="BOTTOM" tickLength="10.0" tickUnit="20.0" upperBound="300.0" />
         </xAxis>
         <yAxis>
-          <NumberAxis animated="false" side="LEFT" />
+          <NumberAxis fx:id="YNumberAxis" animated="false" side="LEFT" />
         </yAxis>
       </LineChart>
       <VBox spacing="20.0" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="10.0">
@@ -58,22 +58,51 @@
                   <Label fx:id="DeviceBLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
+            <Label text="新算法" />
+            <HBox spacing="30.0">
+               <children>
+                  <Label text="T峰信息:" />
+                  <Label fx:id="Label1" alignment="CENTER" textAlignment="JUSTIFY" />
+               </children>
+            </HBox>
+            <HBox spacing="30.0">
+               <children>
+                  <Label text="残留检测:" />
+                  <Label fx:id="Label2" alignment="CENTER" textAlignment="JUSTIFY" />
+               </children>
+            </HBox>
+            <HBox spacing="30.0">
+               <children>
+                  <Label text="C峰信息:" />
+                  <Label fx:id="Label3" alignment="CENTER" textAlignment="JUSTIFY" />
+               </children>
+            </HBox>
+            <HBox spacing="30.0">
+               <children>
+                  <Label text="基线信息:" />
+                  <Label fx:id="Label4" alignment="CENTER" textAlignment="JUSTIFY" />
+               </children>
+            </HBox>
+            <HBox spacing="30.0">
+               <children>
+                  <Label text="基线分析:" />
+                  <Label fx:id="Label5" alignment="CENTER" textAlignment="JUSTIFY" />
+               </children>
+            </HBox>
+            <HBox spacing="30.0">
+               <children>
+                  <Label text="末尾检测:" />
+                  <Label fx:id="Label6" alignment="CENTER" textAlignment="JUSTIFY" />
+               </children>
+            </HBox>
          </children>
       </VBox>
-      <Label fx:id="Label1" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
-      <Label fx:id="Label2" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
-      <Label fx:id="Label3" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
-      <Label fx:id="Label4" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
-      <Label fx:id="Label5" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
-      <Label fx:id="Label6" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
-      <Label fx:id="Label7" alignment="CENTER" layoutX="1144.0" layoutY="225.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
-      <Label fx:id="Label8" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="39.0" prefWidth="94.0" style="-fx-border-color: red; -fx-border-width: 0 2 0 2;" textAlignment="JUSTIFY" />
-      <ImageView fx:id="yes" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="150.0">
+      <ImageView fx:id="yes" fitHeight="150.0" fitWidth="200.0" layoutX="358.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="358.0" AnchorPane.topAnchor="14.0">
          <image>
             <Image url="@../../../../res/yes.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="error" fitHeight="150.0" fitWidth="200.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="150.0">
+      <ImageView fx:id="error" fitHeight="150.0" fitWidth="200.0" layoutX="351.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="351.0" AnchorPane.topAnchor="21.0">
          <image>
             <Image url="@../../../../res/error.png" />
          </image>
