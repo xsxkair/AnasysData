@@ -54,9 +54,10 @@ public class AnasysData extends Application{
 	@FXML LineChart<Number, Number> myChart;
 	@FXML NumberAxis YNumberAxis;
 	@FXML Label IDLabel;
+	@FXML Label IDLabel1;
 	
 	@FXML Label DeviceTLabel;
-	@FXML Label DeviceBLabel;
+	@FXML Label DeviceLabel;
 	@FXML Label DeviceCLabel;
 	
 	@FXML ImageView yes;
@@ -67,6 +68,8 @@ public class AnasysData extends Application{
 	@FXML Label Label4;
 	@FXML Label Label5;
 	@FXML Label Label6;
+	@FXML Label Label7;
+	@FXML Label Label8;
 	
 	private TestDataRepository testDataRepository;
 	private CardRepository cardRepository;
@@ -77,6 +80,16 @@ public class AnasysData extends Application{
 	private int size = 0;
 
 	private final String fileName = "e:\\image\\data.xls";
+	private StringBuffer imagePathStringBuffer = new StringBuffer();
+	private int errorId[]= {
+			726, 1533, 1722, 1715, 1714, 1539, 1502, 1619, 1588, 1512, 1613, 772, 1775, 2234, 2236, 1788, 2102, 2109, 2186, 2274, 2300, 2481,
+			2375, 2317, 2434, 2456, 2485, 2296, 2261, 2431, 2328, 2426, 2636, 2641, 472, 298, 723, 1447, 726, 1296, 1358, 1677, 1234, 2440, 
+			2437, 1019, 381, 380, 426, 385, 470, 412, 390, 428, 468, 395, 666, 	603, 640, 690, 593, 648, 677, 605, 576, 637, 667, 586, 658, 663,
+			653, 628, 606, 649, 627, 617, 636, 632, 655, 671, 685, 686, 684, 630, 678, 639, 641, 651, 664, 620, 642, 1018, 1066, 1688, 1061, 
+			1058, 1146, 1065, 1113, 1698, 1112, 1697, 1140, 2430, 2435, 2433, 1010, 924, 1365, 915, 988, 966, 1577, 1346, 1501, 1604, 1570, 
+			1509, 1716, 1548, 1709, 1973, 1814, 2313, 2085, 2311, 2623, 2588, 2590, 2557, 2397, 2385, 2553, 2488, 2276, 2351, 2479, 2640, 2386, 2294,
+			
+	};
 
 	public void UI_Init(){
 		
@@ -148,9 +161,10 @@ public class AnasysData extends Application{
 		cardRepository = SpringFacktory.getCtx().getBean(CardRepository.class);
 		javaType = mapper.getTypeFactory().constructParametricType(List.class, Double.class);
 
-		for(j=2600; j<2611; j++) {
+		for(j=800; j<2660; j++) {
+		//for(j=0; j< errorId.length; j++) {
 			testData = testDataRepository.findOne(j);
-
+			IDLabel1.setText(String.format("%d", j));
 	        if(testData != null){
 	
 	        	card = cardRepository.findCardByCid(testData.getCid());
@@ -164,6 +178,9 @@ public class AnasysData extends Application{
 	        	Label3.setText(null);
 	        	Label4.setText(null);
 	        	Label5.setText(null);
+	        	Label6.setText(null);
+	        	Label7.setText(null);
+	        	Label8.setText(null);
 	        	
 	        	seriesdata.clear();
 	        	series.getData().clear();
@@ -215,86 +232,159 @@ public class AnasysData extends Application{
 		        	stackPane.setStyle("-fx-background-color:red");
 		        	stackPane.setPrefSize(10, 10);
 	        		
-		        	DeviceTLabel.setText(String.format("(%d, %.0f)", t, seriesdata.get(t)));
+		        	DeviceTLabel.setText(String.format("(%d, %.0f)--%d", t, seriesdata.get(t), card.getT_l()));
 	        	}
 
 		        if(c != null){
 		        	stackPane = (StackPane) series.getData().get(c).getNode();
 			        stackPane.setStyle("-fx-background-color:red");
 		        	stackPane.setPrefSize(10, 10);
-		        	DeviceCLabel.setText(String.format("(%d, %.0f)", c, seriesdata.get(c)));
+		        	DeviceCLabel.setText(String.format("(%d, %.0f)--%d", c, seriesdata.get(c), card.getC_l()));
 	        	}
 		        
-		        t_l = card.getT_l();
-		        c_l = card.getC_l();
-		        //找T
-		        findFeng(seriesdata, t_l-20, t_l, t_l+20, tempTPoint);
-		        if(tempTPoint.x == 0)
+		        if(testData.getT_re() != null)
+		        	DeviceLabel.setText(testData.getT_re());
+		        else
+		        	DeviceLabel.setText("无");
+		        
+		        tempcv1 = getDataCV(seriesdata, 0);
+		        if(tempcv1 < 0.01)
 		        {
 		        	yes.setVisible(false);
-		        	Label1.setText("找不到T线");
-		        	saveImage(testData);
+		        	Label6.setText(String.format("cv %.4f < 0.01, 未加样", tempcv1));
+		        	Label6.setStyle("-fx-text-fill:red");
+		        	saveImage(testData, false);
 		        	continue;
 		        }
 		        else
 		        {
-		        	stackPane = (StackPane) series.getData().get(tempTPoint.x).getNode();
-				    stackPane.setStyle("-fx-background-color:blue");
-				    stackPane.setPrefSize(10, 10);
-				    
-		        	Label1.setText(String.format("(%d, %.0f)", tempTPoint.x, tempTPoint.y));
+		        	Label6.setText(String.format("cv %.4f > 0.01", tempcv1));
+		        	Label6.setStyle("-fx-text-fill:black");
 		        }
 		        
+		        t_l = card.getT_l();
+		        c_l = card.getC_l();
+		        //找T
+		        findFeng(seriesdata, t_l-30, t_l, t_l+30, tempTPoint);
+		        if(tempTPoint.x == 0)
+		        {
+		        	//如果没找到峰，则判断是不是峰是平的，如果是，则在t线点取一点为峰
+		            tempd = seriesdata.subList(t_l-15, t_l+15);
+		            tempv1 = getDataCV(tempd, 0);
+		            if(tempv1 < 0.05)
+		            {
+		            	tempTPoint.x = t_l;
+		            	tempTPoint.y = seriesdata.get(t_l);
+		            	Label1.setText(String.format("(%d, %.0f) -- %.4f", tempTPoint.x, tempTPoint.y, tempv1));
+		            }
+		            else
+		            {
+		            	yes.setVisible(false);
+			        	Label1.setText(String.format("%.4f > 0.05, 找不到T线", tempv1));
+			        	Label1.setStyle("-fx-text-fill:red");
+			        	saveImage(testData, false);
+			        	continue;
+		            }
+		        }
+		        else
+		        {
+		        	Label1.setText(String.format("(%d, %.0f)", tempTPoint.x, tempTPoint.y));
+				}
+
+		        stackPane = (StackPane) series.getData().get(tempTPoint.x).getNode();
+		        stackPane.setStyle("-fx-background-color:blue");
+		        stackPane.setPrefSize(10, 10);
+
+		        Label1.setStyle("-fx-text-fill:black");
+		        
 		        //残留检测
-		        tempd = seriesdata.subList(20, tempTPoint.x-20);
-		        for(i=20; i<tempTPoint.x-20; i++)
+		        
+		        tempv1 = 0;
+		        tempcv2 = 0;
+		        for(i=20; i<tempTPoint.x-30; i++)
+	        	{
+		        	tempv1 += seriesdata.get(i);
+				    if(i >= 35)
+				    {
+				    	tempd = seriesdata.subList(20, i+1);
+			        	tempcv1 = getDataCV(tempd, tempv1);
+			        	if(tempcv2 < tempcv1)
+			        	{
+			        		tempcv2 = tempcv1;
+			        		k = i;
+			        	}
+				    }
+	        	}
+		        for(i=20; i<k; i++)
 	        	{
 	        		stackPane = (StackPane) series.getData().get(i).getNode();
 				    stackPane.setStyle("-fx-background-color:black");
 				    stackPane.setPrefSize(5, 5);
 	        	}
-		        tempcv1 = getDataCV(tempd);
-		        if(tempcv1 > 0.05)
+
+		        if(tempcv2 > 0.15)
 		        {
 		        	yes.setVisible(false);
-		        	Label2.setText(String.format("cv：%.4f > 0.05, 有残留", tempcv1));
-		        	
-		        	saveImage(testData);
+		        	Label2.setText(String.format("cv：%.4f > 0.15, 有残留", tempcv2));
+		        	Label2.setStyle("-fx-text-fill:red");
+		        	saveImage(testData, false);
 		        	continue;
 		        }
 		        else
 		        {
-		        	Label2.setText(String.format("cv：%.4f < 0.05, 无残留", tempcv1));
+		        	Label2.setText(String.format("cv：%.4f < 0.15, 无残留", tempcv2));
+		        	Label2.setStyle("-fx-text-fill: black");
 		        }
 		       
 		        //找C
-		        findFeng(seriesdata, c_l-20, c_l, c_l+20, tempCPoint);
+		        findFeng(seriesdata, c_l-30, c_l, c_l+30, tempCPoint);
 		        if(tempCPoint.x == 0)
 		        {
+		        	//如果没找到峰，则判断是不是峰是平的，如果是，则在t线点取一点为峰
+		            tempd = seriesdata.subList(c_l-15, c_l+15);
+		            tempv1 = getDataCV(tempd, 0);
+		            if(tempv1 < 0.05)
+		            {
+		            	tempCPoint.x = c_l;
+		            	tempCPoint.y = seriesdata.get(c_l);
+		            	Label3.setText(String.format("(%d, %.0f) -- %.4f", tempCPoint.x, tempCPoint.y, tempv1));
+		            }
+		            else
+		            {
+		            	yes.setVisible(false);
+		            	Label3.setText(String.format("%.4f, 找不到C线", tempv1));
+		            	Label3.setStyle("-fx-text-fill:red");
+			        	saveImage(testData, false);
+			        	continue;
+		            }
+		        }
+		        else
+		        {
+		        	Label3.setText(String.format("(%d, %.0f)", tempCPoint.x, tempCPoint.y));
+		        }
+		        stackPane = (StackPane) series.getData().get(tempCPoint.x).getNode();
+		        stackPane.setStyle("-fx-background-color:blue");
+		        stackPane.setPrefSize(10, 10);
+
+		        Label3.setStyle("-fx-text-fill:black");
+
+		        //T-C距离
+		        i = tempCPoint.x - tempTPoint.x;
+
+		        if((i < 50) || (i > 100))
+		        {
 		        	yes.setVisible(false);
-		        	Label3.setText("找不到C线");
-		        	saveImage(testData);
+		        	Label7.setText(String.format("%d, T-C距离错误", i));
+		        	Label7.setStyle("-fx-text-fill:red");
+		        	saveImage(testData, false);
 		        	continue;
 		        }
 		        else
 		        {
-		        	stackPane = (StackPane) series.getData().get(tempCPoint.x).getNode();
-				    stackPane.setStyle("-fx-background-color:blue");
-				    stackPane.setPrefSize(10, 10);
-				    
-		        	Label3.setText(String.format("(%d, %.0f)", tempCPoint.x, tempCPoint.y));
+		        	Label7.setText(String.format("%d, T-C距离正常", i));
+		        	Label7.setStyle("-fx-text-fill : black");
 		        }
-
-/*		        //T-C距离
-		        i = tempCPoint.x - tempTPoint.x;
-		        logTextArea.appendText(String.format("%d\r\n", i));
-		        if((i < 70) && (i > 90))
-		        {
-		        	ResultLabel7.setText(String.format("%d, T-C距离错误", i));
-		        	saveImage(testData);
-		        	continue;
-		        }
-		        */
+		        
 		        //找基线
 		        tempBPoint.y = 20000;
 		        tempBPoint.x = 0;
@@ -312,7 +402,7 @@ public class AnasysData extends Application{
 		        Label4.setText(String.format("(%d, %.0f)", tempBPoint.x, tempBPoint.y));
 		        
 		        //基线分析
-		        for(i=tempTPoint.x+25; i<tempCPoint.x-25; i++)
+		        for(i=tempTPoint.x+30; i<tempCPoint.x-25; i++)
 	        	{
 		        	if(i != tempBPoint.x)
 		        	{
@@ -321,54 +411,55 @@ public class AnasysData extends Application{
 					    stackPane.setPrefSize(5, 5);
 		        	}
 	        	}
-		        tempd = seriesdata.subList(tempTPoint.x+25, tempCPoint.x-25);
-		        tempcv1 = getDataCV(tempd);
-		        if(tempcv1 > 0.05)
+		        tempd = seriesdata.subList(tempTPoint.x+28, tempCPoint.x-22
+		        		);
+		        tempcv1 = getDataCV(tempd, 0);
+		        if(tempcv1 > 0.1)
 		        {
 		        	yes.setVisible(false);
-		        	Label5.setText(String.format("cv：%.4f > 0.05, 错误", tempcv1));
-		        	
-		        	saveImage(testData);
+		        	Label5.setText(String.format("cv：%.4f > 0.1, 错误", tempcv1));
+		        	Label5.setStyle("-fx-text-fill : red");
+		        	saveImage(testData, false);
 		        	continue;
 		        }
 		        else
 		        {
-		        	Label5.setText(String.format("cv：%.4f < 0.05, 正常", tempcv1));
+		        	Label5.setText(String.format("cv：%.4f < 0.1, 正常", tempcv1));
+		        	Label5.setStyle("-fx-text-fill : black");
 		        }
 		        
-		        //末尾分析
-		        for(i=tempCPoint.x+25; i<300; i++)
-	        	{
-	        		stackPane = (StackPane) series.getData().get(i).getNode();
-				    stackPane.setStyle("-fx-background-color:black");
-				    stackPane.setPrefSize(5, 5);
-	        	}
-		        tempd = seriesdata.subList(tempCPoint.x+25, 300);
-		        tempcv1 = getDataCV(tempd);
-		        if(tempcv1 > 0.05)
+		        //T和C必须有一个搞峰
+		        tempd = seriesdata.subList(tempTPoint.x, tempTPoint.x+20);
+		        tempcv1 = getDataCV(tempd, 0);
+		        
+		        tempd = seriesdata.subList(tempCPoint.x, tempCPoint.x+20);
+		        tempcv2 = getDataCV(tempd, 0);
+
+		        if(tempcv1 < 0.1 && tempcv2 < 0.1)
 		        {
 		        	yes.setVisible(false);
-		        	Label6.setText(String.format("cv：%.4f > 0.05, 错误", tempcv1));
-		        	
-		        	saveImage(testData);
+		        	Label8.setText(String.format("cv和：(%.4f, %.4f) < 0.1, 俩峰都矮，错误", tempcv1, tempcv2));
+		        	Label8.setStyle("-fx-text-fill : red");
+		        	saveImage(testData, false);
 		        	continue;
 		        }
-		        else
+		        else 
 		        {
-		        	Label6.setText(String.format("cv：%.4f < 0.05, 正常", tempcv1));
-		        }
+		        	Label8.setText(String.format("cv和：(%.4f, %.4f) > 0.1, 正常", tempcv1, tempcv2));
+		        	Label8.setStyle("-fx-text-fill : black");
+				}
 		        
 		        yes.setVisible(true);
-		        saveImage(testData);
+		        saveImage(testData, true);
 			}
 		}
        
 		System.exit(0);
 	}
 	
-	private void saveImage(TestData testData) {
+	private void saveImage(TestData testData, boolean isRight) {
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(100);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -376,8 +467,18 @@ public class AnasysData extends Application{
 
         Image image = rootPane.snapshot(null, null);
 	    try {
+	    	imagePathStringBuffer.setLength(0);
+	    	if(isRight)
+	    		imagePathStringBuffer.append("e:\\image\\OK\\");
+	    	else
+	    		imagePathStringBuffer.append("e:\\image\\Error\\");
+	    	
+	    	imagePathStringBuffer.append(testData.getCid());
+	    	imagePathStringBuffer.append(testData.getCnum());
+	    	imagePathStringBuffer.append(".png");
+	    	
 	        ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png",
-	                new File("e:\\image\\" + testData.getCid()+testData.getCnum() + ".png"));
+	                new File(imagePathStringBuffer.toString()));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
@@ -388,6 +489,7 @@ public class AnasysData extends Application{
 		int i=0, j=0;
 		double juli = 10000;
 		double tempv1 = 0;
+		List<Double> tempd = null;
 		MyPoint tempPoint = new MyPoint();
 		
 		myPoint.resetMyPoint();
@@ -413,8 +515,12 @@ public class AnasysData extends Application{
         			break;
         			
         		//峰后必须递减
-        		if(datas.get(tempPoint.x+j) < datas.get(tempPoint.x+j+1))
-        			break;
+        		if(tempPoint.x+j+1 < 300)
+        		{
+        			if(datas.get(tempPoint.x+j) < datas.get(tempPoint.x+j+1))
+        				break;
+        		}
+        			
         	}
         	// 如果阶段结果失败，则找峰失败
         	if(j < 10)
@@ -424,10 +530,8 @@ public class AnasysData extends Application{
         	}
         	else 
         	{
-        		if(juli > Math.abs(tempPoint.x - midIndex))
+        		if(tempPoint.y > myPoint.y)
         		{
-        			juli = Math.abs(tempPoint.x - midIndex);
-
 		        	myPoint.x = tempPoint.x;
 		        	myPoint.y = tempPoint.y;
         		}
@@ -447,14 +551,17 @@ public class AnasysData extends Application{
 		return sum;
 	}	
 	
-	private double getDataCV(List<Double> datas) {
+	private double getDataCV(List<Double> datas, double ssum) {
 		int size = datas.size();
 		double sum = 0.0f;
 		double tempv1 = 0;
 		double tempv2 = 0;
 		
 		//找平均值
-		sum = aveag(datas);
+		if(ssum == 0)
+			sum = aveag(datas);
+		else
+			sum = ssum/size;
 		
 		//计算标准差
 		for (double j : datas) {

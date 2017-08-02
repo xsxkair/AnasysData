@@ -39,6 +39,20 @@
                   </Label>
                </children>
             </HBox>
+            <HBox spacing="10.0">
+               <children>
+                  <Label text="数据库编号：">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="IDLabel1" style="-fx-background-color: black;" text="Label" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
             <GridPane gridLinesVisible="true" style="-fx-background-color: rgba(135,202,250,0.2);">
                <columnConstraints>
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -51,58 +65,118 @@
                </rowConstraints>
                <children>
                   <Label text="T线" />
-                  <Label text="C线" GridPane.rowIndex="2" />
+                  <Label text="C线" GridPane.rowIndex="1" />
                   <Label fx:id="DeviceTLabel" text="Label" GridPane.columnIndex="1" />
-                  <Label fx:id="DeviceCLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label text="基线" GridPane.rowIndex="1" />
-                  <Label fx:id="DeviceBLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label fx:id="DeviceCLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="设备结果" GridPane.rowIndex="2" />
+                  <Label fx:id="DeviceLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
             </GridPane>
             <Label text="新算法" />
             <HBox spacing="30.0">
                <children>
-                  <Label text="T峰信息:" />
-                  <Label fx:id="Label1" alignment="CENTER" textAlignment="JUSTIFY" />
+                  <Label text="整体检测:">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <Label fx:id="Label6" alignment="CENTER" textAlignment="JUSTIFY">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="30.0">
                <children>
-                  <Label text="残留检测:" />
-                  <Label fx:id="Label2" alignment="CENTER" textAlignment="JUSTIFY" />
+                  <Label text="T峰信息:">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <Label fx:id="Label1" alignment="CENTER" textAlignment="JUSTIFY">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="30.0">
                <children>
-                  <Label text="C峰信息:" />
-                  <Label fx:id="Label3" alignment="CENTER" textAlignment="JUSTIFY" />
+                  <Label text="残留检测:">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <Label fx:id="Label2" alignment="CENTER" textAlignment="JUSTIFY">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="30.0">
                <children>
-                  <Label text="基线信息:" />
-                  <Label fx:id="Label4" alignment="CENTER" textAlignment="JUSTIFY" />
+                  <Label text="C峰信息:">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <Label fx:id="Label3" alignment="CENTER" textAlignment="JUSTIFY">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="30.0">
                <children>
-                  <Label text="基线分析:" />
-                  <Label fx:id="Label5" alignment="CENTER" textAlignment="JUSTIFY" />
+                  <Label text="基线信息:">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <Label fx:id="Label4" alignment="CENTER" textAlignment="JUSTIFY">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
                </children>
             </HBox>
             <HBox spacing="30.0">
                <children>
-                  <Label text="末尾检测:" />
-                  <Label fx:id="Label6" alignment="CENTER" textAlignment="JUSTIFY" />
+                  <Label text="基线分析:">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <Label fx:id="Label5" alignment="CENTER" textAlignment="JUSTIFY">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+               </children>
+            </HBox>
+            <HBox spacing="30.0">
+               <children>
+                  <Label text="T-C距离：">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <Label fx:id="Label7" alignment="CENTER" textAlignment="JUSTIFY">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+               </children>
+            </HBox>
+            <HBox spacing="30.0">
+               <children>
+                  <Label text="T和C高度分析：">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
+                  <Label fx:id="Label8" alignment="CENTER" textAlignment="JUSTIFY">
+                     <font>
+                        <Font size="15.0" />
+                     </font></Label>
                </children>
             </HBox>
          </children>
       </VBox>
-      <ImageView fx:id="yes" fitHeight="150.0" fitWidth="200.0" layoutX="358.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="358.0" AnchorPane.topAnchor="14.0">
+      <ImageView fx:id="yes" fitHeight="150.0" fitWidth="200.0" layoutX="577.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="577.0" AnchorPane.topAnchor="14.0">
          <image>
             <Image url="@../../../../res/yes.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="error" fitHeight="150.0" fitWidth="200.0" layoutX="351.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="351.0" AnchorPane.topAnchor="21.0">
+      <ImageView fx:id="error" fitHeight="150.0" fitWidth="200.0" layoutX="570.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="570.0" AnchorPane.topAnchor="21.0">
          <image>
             <Image url="@../../../../res/error.png" />
          </image>
